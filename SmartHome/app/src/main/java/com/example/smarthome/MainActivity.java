@@ -1,9 +1,11 @@
 package com.example.smarthome;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -29,6 +31,19 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference db_fan;
     Integer val_fan;
     SeekBar fan;
+
+    ImageButton faceid;
+
+    DatabaseReference db_hum;
+    Float val_hum;
+    TextView hum;
+
+    DatabaseReference db_tempC;
+    Float val_tempC;
+    TextView tempC;
+    DatabaseReference db_tempF;
+    Float val_tempF;
+    TextView tempF;
     boolean isStart = false;
 
     @Override
@@ -51,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
         db_fan = database.getReference("fan");
         fan = findViewById(R.id.fan);
 
+        faceid = findViewById(R.id.faceid);
+
+        db_hum = database.getReference("hum");
+        hum = findViewById(R.id.hum);
+
+        db_tempC = database.getReference("tempC");
+        tempC = findViewById(R.id.tempC);
+
+//        db_tempF = database.getReference("tempF");
+//        tempF = findViewById(R.id.tempF);
 
         db_light.addValueEventListener(new ValueEventListener() {
             @Override
@@ -85,6 +110,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        db_hum.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                val_hum = snapshot.getValue(Float.class);
+                hum.setText(val_hum.toString() + "%");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        db_tempC.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                val_tempC = snapshot.getValue(Float.class);
+                tempC.setText(val_tempC.toString() + "°C");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         light.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +167,15 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
+        faceid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FaceID.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
